@@ -1,13 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reelrave/core/constant/colors.dart';
 import 'package:reelrave/core/constant/images.dart';
+import 'package:reelrave/presentation/bloc/home/home_bloc.dart';
 
-import 'presentation/screen/home.dart';
+import 'presentation/screen/mainpage.dart';
 
-void main() => runApp(MaterialApp(
-      home: const SplashScreen(),
-      theme: ThemeData(scaffoldBackgroundColor: AppColors.bgColor),
-    ));
+// void main() => runApp(MaterialApp(
+//       home: const SplashScreen(),
+//       theme: ThemeData(scaffoldBackgroundColor: AppColors.bgColor),
+//     ));
+
+void main() {
+  runApp(MultiBlocProvider(
+      //! Better to use _ for any params if it is not used
+      providers: [
+        //! Method call that is triggered in initState can be called here as below
+        BlocProvider<HomeBloc>(create: (_) => HomeBloc())
+      ],
+      child: MaterialApp(
+        theme: ThemeData(scaffoldBackgroundColor: AppColors.bgColor),
+        home: const SplashScreen(),
+      )));
+}
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
