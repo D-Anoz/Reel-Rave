@@ -74,6 +74,7 @@ class _MovieHomePageState extends State<MovieHomePage> {
                     //column for the lists of movies
                     Expanded(
                       child: SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
                         child: Column(
                           children: [
                             Padding(
@@ -95,39 +96,56 @@ class _MovieHomePageState extends State<MovieHomePage> {
                             ),
                             SizedBox(
                               height: 280,
-                              child: GridView.builder(
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                  childAspectRatio: 0.5,
-                                  crossAxisSpacing: 8.0,
-                                  mainAxisSpacing: 8.0,
+                              width: double.infinity,
+                              child: Expanded(
+                                child: ListView.builder(
+                                  physics: const BouncingScrollPhysics(),
+                                  scrollDirection: Axis.horizontal, // Enable horizontal scrolling
+                                  itemCount: 5, // Adjust item count to reflect actual data length
+                                  itemBuilder: (context, index) {
+                                    final movieResult = topRateData[index];
+                                    return Container(
+                                      width: 150, // Set a fixed width to simulate grid-like layout
+                                      margin: const EdgeInsets.symmetric(horizontal: 8.0), // Add horizontal spacing
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Card(
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.circular(4),
+                                              child: Image.network(
+                                                '${AppServices.popular_movies_500px}${movieResult.posterPath}',
+                                                fit: BoxFit.cover, // Optional: Adjust image scaling
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(left: 4),
+                                            child: Text(
+                                              movieResult.title ?? 'Untitled title',
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(left: 4),
+                                            child: Text(
+                                              movieResult.releaseDate?.substring(0, 4) ?? 'Untitled date',
+                                              style: const TextStyle(
+                                                color: Color.fromARGB(255, 0, 104, 189),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
                                 ),
-                                itemCount: 3,
-                                itemBuilder: (context, index) {
-                                  final movieResult = topRateData[index];
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Card(
-                                        // elevation: 4,
-                                        child: ClipRRect(borderRadius: BorderRadius.circular(4), child: Image.network('${AppServices.popular_movies_500px}${movieResult.posterPath}')),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 4),
-                                        child: Text(
-                                          movieResult.title ?? 'Untitled title',
-                                          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 4),
-                                        child: Text(movieResult.releaseDate?.substring(0, 4) ?? 'Untitled date', style: const TextStyle(color: Color.fromARGB(255, 0, 104, 189))),
-                                      )
-                                    ],
-                                  );
-                                },
                               ),
                             ),
                             //popular lists
@@ -142,7 +160,7 @@ class _MovieHomePageState extends State<MovieHomePage> {
                                   ),
                                   TextButton(
                                       onPressed: () {
-                                        debugPrint('Loading...');
+                                        Navigator.pushNamed(context, '/popular');
                                       },
                                       child: const Text('View all', style: TextStyle(color: Colors.blue)))
                                 ],
@@ -150,39 +168,57 @@ class _MovieHomePageState extends State<MovieHomePage> {
                             ),
                             SizedBox(
                               height: 285,
-                              child: GridView.builder(
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                  childAspectRatio: 0.5,
-                                  crossAxisSpacing: 8.0,
-                                  mainAxisSpacing: 8.0,
-                                ),
-                                itemCount: 3,
-                                itemBuilder: (context, index) {
-                                  final popularResult = popularData?[index];
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Card(
-                                        // elevation: 4,
-                                        child: ClipRRect(borderRadius: BorderRadius.circular(4), child: Image.network('${AppServices.popular_movies_500px}${popularResult?.posterPath}')),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 4),
-                                        child: Text(
-                                          popularResult?.title ?? 'Untitled title',
-                                          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 4),
-                                        child: Text(popularResult!.releaseDate.toString().substring(0, 4), style: const TextStyle(color: Color.fromARGB(255, 0, 104, 189))),
-                                      )
-                                    ],
-                                  );
-                                },
+                              width: 500,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: ListView.builder(
+                                      physics: const BouncingScrollPhysics(),
+                                      scrollDirection: Axis.horizontal, // Set horizontal scrolling
+                                      itemCount: 5, // Update this to reflect the actual item count
+                                      itemBuilder: (context, index) {
+                                        final popularResult = popularData?[index];
+                                        return Container(
+                                          width: 150, // Set a fixed width for each item to mimic a grid-like layout
+                                          margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Card(
+                                                child: ClipRRect(
+                                                  borderRadius: BorderRadius.circular(4),
+                                                  child: Image.network(
+                                                    '${AppServices.popular_movies_500px}${popularResult?.posterPath}',
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4),
+                                                child: Text(
+                                                  popularResult?.title ?? 'Untitled title',
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4),
+                                                child: Text(
+                                                  popularResult?.releaseDate.toString().substring(0, 4) ?? 'Unknown year',
+                                                  style: const TextStyle(color: Color.fromARGB(255, 0, 104, 189)),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
                             )
                           ],
