@@ -161,23 +161,23 @@ class MovieResult {
 }
 
 // MovieResponse.dart
-class MovieResponse {
-  final int? page;
-  final List<MovieResult>? results;
+// class MovieResponse {
+//   final int? page;
+//   final List<MovieResult>? results;
 
-  MovieResponse({
-    this.page,
-    this.results,
-  });
+//   MovieResponse({
+//     this.page,
+//     this.results,
+//   });
 
-  // Factory method to create a MovieResponse from JSON with optional fields
-  factory MovieResponse.fromJson(Map<String, dynamic> json) {
-    var list = json['results'] as List?;
-    List<MovieResult>? movieList = list != null ? list.map((i) => MovieResult.fromJson(i)).toList() : null;
+//   // Factory method to create a MovieResponse from JSON with optional fields
+//   factory MovieResponse.fromJson(Map<String, dynamic> json) {
+//     var list = json['results'] as List?;
+//     List<MovieResult>? movieList = list != null ? list.map((i) => MovieResult.fromJson(i)).toList() : null;
 
-    return MovieResponse(
-      page: json['page'],
-      results: movieList,
-    );
-  }
-}
+//     return MovieResponse(
+//       page: json['page'],
+//       results: movieList,
+//     );
+//   }
+// }

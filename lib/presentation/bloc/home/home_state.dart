@@ -12,15 +12,17 @@ class HomeLoadingState extends HomeState {}
 
 class HomeLoadedState extends HomeState {
   final List<UpcomingModel>? upcomingLists;
-  final List<MovieResult>? results;
+  final List<MovieResult>? topRated;
   final List<ForYouModel>? forYouLists;
+  final List<PopularResult>? popular;
 
-  HomeLoadedState({this.upcomingLists, this.results, this.forYouLists});
+  HomeLoadedState({this.upcomingLists, this.topRated, this.forYouLists, this.popular});
   @override
   List<Object> get props => [
         upcomingLists!,
-        results!,
-        forYouLists!
+        topRated!,
+        forYouLists!,
+        popular!
       ];
 }
 

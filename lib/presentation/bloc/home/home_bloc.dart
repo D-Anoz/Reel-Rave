@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:reelrave/services/remote/home_services.dart';
 
 import '../../../model/forYou.dart';
+import '../../../model/popular.dart';
 import '../../../model/topRated.dart';
 import '../../../model/upcoming_model.dart';
 
@@ -17,10 +18,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       (event, emit) async {
         if (event is HomeLoadedEvent) {
           try {
-            final moviesList = await homeServices.getUpcoming();
-            emit(HomeLoadedState(
-              results: moviesList,
-            ));
+            final topRated = await homeServices.getTopRated();
+            final popular = await homeServices.getPopular();
+            emit(HomeLoadedState(topRated: topRated, popular: popular));
           } catch (e) {
             emit(HomeLoadingErrorState(errorMsg: e.toString()));
           }
