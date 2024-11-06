@@ -13,6 +13,16 @@ class TopRated extends StatefulWidget {
 }
 
 class _TopRatedState extends State<TopRated> {
+  //strings
+  final Map<int, bool> savedStatus = {};
+
+  //methods
+  void toggleIsSaved(int movieId) {
+    setState(() {
+      savedStatus[movieId] = !(savedStatus[movieId] ?? false);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,27 +81,51 @@ class _TopRatedState extends State<TopRated> {
                   itemCount: topRateData!.length,
                   itemBuilder: (context, index) {
                     final movieResult = topRateData[index];
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Card(
-                          // elevation: 4,
-                          child: ClipRRect(borderRadius: BorderRadius.circular(8), child: Image.network('${AppServices.popular_movies_500px}${movieResult!.posterPath}')),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 4),
-                          child: Text(
-                            movieResult.title ?? 'Untitled title',
-                            style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                    final isSaved = savedStatus[movieResult.id] ?? false;
+                    return GestureDetector(
+                      onTap: () {
+                        print('single tap');
+                      },
+                      onDoubleTap: () => toggleIsSaved(movieResult.id!),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Card(
+                            // elevation: 4,
+                            child: Stack(children: [
+                              Column(
+                                children: [
+                                  ClipRRect(borderRadius: BorderRadius.circular(8), child: Image.network('${AppServices.popular_movies_500px}${movieResult!.posterPath}')),
+                                ],
+                              ),
+                              Positioned(
+                                top: 8,
+                                right: 8,
+                                child: isSaved
+                                    ? const Icon(
+                                        Icons.bookmark,
+                                        color: AppColors.primaryColor,
+                                        size: 28,
+                                      )
+                                    : const SizedBox.shrink(),
+                              )
+                            ]),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 4),
-                          child: Text(movieResult.releaseDate?.substring(0, 4) ?? 'Untitled date', style: const TextStyle(color: Color.fromARGB(255, 0, 104, 189))),
-                        )
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.only(left: 4),
+                            child: Text(
+                              movieResult.title ?? 'Untitled title',
+                              style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 4),
+                            child: Text(movieResult.releaseDate?.substring(0, 4) ?? 'Untitled date', style: const TextStyle(color: Color.fromARGB(255, 0, 104, 189))),
+                          )
+                        ],
+                      ),
                     );
                   },
                 );
