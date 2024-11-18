@@ -6,4 +6,6 @@ class AppServices {
   static const String upComing = 'movie/popular';
   static const String popular = 'movie/top_rated';
   static const String popular_movies_500px = 'https://image.tmdb.org/t/p/w500';
+  static const String tvAiringToday = 'tv/airing_today';
+  static const String api_key_query = 'api_key=$api_key';
 }

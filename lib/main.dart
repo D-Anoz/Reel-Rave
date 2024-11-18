@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reelrave/core/constant/colors.dart';
 import 'package:reelrave/core/constant/images.dart';
 import 'package:reelrave/core/route/route.dart';
+import 'package:reelrave/presentation/bloc/TV/tv_bloc.dart';
 import 'package:reelrave/presentation/bloc/home/home_bloc.dart';
 
 import 'presentation/screen/mainpage.dart';
@@ -10,7 +11,8 @@ import 'presentation/screen/mainpage.dart';
 void main() {
   runApp(MultiBlocProvider(
       providers: [
-        BlocProvider<HomeBloc>(create: (_) => HomeBloc())
+        BlocProvider<HomeBloc>(create: (_) => HomeBloc()),
+        BlocProvider<TVBloc>(create: (_) => TVBloc())
       ],
       child: MaterialApp(
         theme: ThemeData(scaffoldBackgroundColor: AppColors.bgColor),

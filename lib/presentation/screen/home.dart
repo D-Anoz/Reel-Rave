@@ -254,7 +254,7 @@ class _MovieHomePageState extends State<MovieHomePage> {
             } else if (state is HomeLoadingErrorState) {
               return Center(child: Text('Error: ${state.errorMsg}'));
             }
-            return const Center(child: Text('Something is wrong'));
+            return const Center(child: Text('You shouldn\'nt be here!'));
           },
           listener: (context, state) {}),
     );

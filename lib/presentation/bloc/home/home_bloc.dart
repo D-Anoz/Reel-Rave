@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:reelrave/services/remote/home_services.dart';
 
 import '../../../model/forYou.dart';
@@ -25,7 +26,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(HomeLoadingErrorState(errorMsg: e.toString()));
           }
         } else {
-          print('Something is wrong');
+          debugPrint('Something is wrong');
         }
       },
     );

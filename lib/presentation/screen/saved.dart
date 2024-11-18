@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SavedListPage extends StatefulWidget {
-  const SavedListPage({super.key});
+  final List<int> savedMovies;
+  const SavedListPage({super.key, required this.savedMovies});
 
   @override
   State<SavedListPage> createState() => _SavedListPageState();

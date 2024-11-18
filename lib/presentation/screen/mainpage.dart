@@ -7,7 +7,7 @@ import 'package:reelrave/presentation/screen/home.dart';
 import 'package:reelrave/presentation/screen/profile.dart';
 import 'package:reelrave/presentation/screen/saved.dart';
 import 'package:reelrave/presentation/screen/search.dart';
-import 'package:reelrave/presentation/screen/tv.dart';
+import 'package:reelrave/presentation/screen/tv/tv.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -30,7 +30,9 @@ class _HomeScreenState extends State<HomeScreen> {
     TVScreen(),
     SearchPage(),
     MovieHomePage(),
-    SavedListPage(),
+    SavedListPage(
+      savedMovies: [],
+    ),
     ProfilePage()
   ];
 
