@@ -17,13 +17,6 @@ class MovieHomePage extends StatefulWidget {
 
 class _MovieHomePageState extends State<MovieHomePage> {
   @override
-  void initState() {
-    super.initState();
-    HomeServices homeServices = HomeServices();
-    homeServices.getTopRated();
-  }
-
-  @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       // statusBarColor: Colors.transparent, // Make status bar transparent

@@ -13,16 +13,23 @@ class TVScreen extends StatefulWidget {
 }
 
 class _TVScreenState extends State<TVScreen> {
+  //strings
+  final Map<int, bool> savedStatus = {};
+
+  //methods
+  void toggleIsSaved(int tvID) {
+    setState(() {
+      savedStatus[tvID] = !(savedStatus[tvID] ?? false);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: AppColors.bgColor,
-        title: const Text(
-          'TV list',
-          style: TextStyle(color: AppColors.primaryColor),
-        ),
+        title: const Text('TV list', style: TextStyle(color: AppColors.primaryColor)),
       ),
       body: BlocProvider(
         create: (content) => TVBloc()..add(TVLoadedEvent()),
@@ -39,10 +46,7 @@ class _TVScreenState extends State<TVScreen> {
                       SizedBox(
                         height: 16,
                       ),
-                      Text(
-                        'Loading data',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                      Text('Loading data', style: TextStyle(color: Colors.white)),
                     ],
                   ),
                 );
@@ -60,15 +64,18 @@ class _TVScreenState extends State<TVScreen> {
                     childAspectRatio: 0.55,
                     crossAxisSpacing: 12,
                   ),
-                  itemCount: tvlist!.length,
+                  itemCount: tvlist.length,
                   itemBuilder: (context, index) {
                     final lists = tvlist[index];
-                    // final isSaved = tvlist[movieResult.id] ?? false;
+                    final String year = lists.firstAirDate.year.toString(); //filtering the date only from the DateTime
+                    final String ratings = lists.voteAverage.toString();
+                    final isSaved = savedStatus[lists.id] ?? false;
+
                     return GestureDetector(
                       onTap: () {
                         debugPrint('single tap');
                       },
-                      // onDoubleTap: () => toggleIsSaved(movieResult.id!),
+                      onDoubleTap: () => toggleIsSaved(lists.id),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -80,26 +87,50 @@ class _TVScreenState extends State<TVScreen> {
                                   ClipRRect(borderRadius: BorderRadius.circular(8), child: Image.network('${AppServices.popular_movies_500px}${lists.posterPath}')),
                                 ],
                               ),
+                              Positioned(
+                                top: 8,
+                                right: 8,
+                                child: isSaved
+                                    ? const Icon(
+                                        Icons.bookmark,
+                                        color: AppColors.primaryColor,
+                                        size: 28,
+                                      )
+                                    : const SizedBox.shrink(),
+                              )
                             ]),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 4),
-                            child: Text(
-                              lists.name,
-                              style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                            child: Text(lists.name, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600), maxLines: 1, overflow: TextOverflow.ellipsis),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 4),
-                            child: Text(
-                              lists.firstAirDate.toString(),
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 0, 104, 189),
-                              ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  year,
+                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 104, 189)),
+                                ),
+                                Row(
+                                  children: [
+                                    lists.voteAverage <= 5
+                                        ? Icon(
+                                            Icons.star_half_rounded,
+                                            color: Colors.yellow.shade100,
+                                            size: 28,
+                                          )
+                                        : const Icon(
+                                            Icons.star_rate_rounded,
+                                            color: Colors.yellow,
+                                            size: 28,
+                                          ),
+                                    const SizedBox(width: 4),
+                                    Text(ratings, style: const TextStyle(color: Colors.white, fontSize: 16))
+                                  ],
+                                )
+                              ],
                             ),
                           )
                         ],
