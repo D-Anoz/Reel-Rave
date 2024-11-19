@@ -14,12 +14,43 @@ class TVScreen extends StatefulWidget {
 
 class _TVScreenState extends State<TVScreen> {
   //strings
-  final Map<int, bool> savedStatus = {};
+  final List<int> savedStatus = [];
 
   //methods
-  void toggleIsSaved(int tvID) {
+  void showAddedMessage(String listName) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('$listName is added to your saved list. '),
+        backgroundColor: AppColors.primaryColor,
+        duration: const Duration(seconds: 5),
+        behavior: SnackBarBehavior.floating,
+        showCloseIcon: true,
+      ),
+    );
+  }
+
+  void showRemoveMessage(String listName) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('$listName is removed from your saved list. '),
+        backgroundColor: AppColors.accentColor,
+        duration: const Duration(seconds: 5),
+        behavior: SnackBarBehavior.floating,
+        showCloseIcon: true,
+      ),
+    );
+  }
+
+  void toggleIsSaved(int tvID, String listName) {
     setState(() {
-      savedStatus[tvID] = !(savedStatus[tvID] ?? false);
+      debugPrint('You have called the function.');
+      if (savedStatus.contains(tvID)) {
+        savedStatus.remove(tvID);
+        showRemoveMessage(listName);
+      } else {
+        savedStatus.add(tvID);
+        showAddedMessage(listName);
+      }
     });
   }
 
@@ -69,36 +100,22 @@ class _TVScreenState extends State<TVScreen> {
                     final lists = tvlist[index];
                     final String year = lists.firstAirDate.year.toString(); //filtering the date only from the DateTime
                     final String ratings = lists.voteAverage.toString();
-                    final isSaved = savedStatus[lists.id] ?? false;
 
                     return GestureDetector(
                       onTap: () {
                         debugPrint('single tap');
                       },
-                      onDoubleTap: () => toggleIsSaved(lists.id),
+                      onDoubleTap: () => toggleIsSaved(lists.id, lists.name),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Card(
                             // elevation: 4,
-                            child: Stack(children: [
-                              Column(
-                                children: [
-                                  ClipRRect(borderRadius: BorderRadius.circular(8), child: Image.network('${AppServices.popular_movies_500px}${lists.posterPath}')),
-                                ],
-                              ),
-                              Positioned(
-                                top: 8,
-                                right: 8,
-                                child: isSaved
-                                    ? const Icon(
-                                        Icons.bookmark,
-                                        color: AppColors.primaryColor,
-                                        size: 28,
-                                      )
-                                    : const SizedBox.shrink(),
-                              )
-                            ]),
+                            child: Column(
+                              children: [
+                                ClipRRect(borderRadius: BorderRadius.circular(8), child: Image.network('${AppServices.popular_movies_500px}${lists.posterPath}')),
+                              ],
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 4),

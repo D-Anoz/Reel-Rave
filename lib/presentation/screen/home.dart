@@ -3,10 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reelrave/core/constant/api_services.dart';
 import 'package:reelrave/presentation/bloc/home/home_bloc.dart';
-import 'package:reelrave/services/remote/home_services.dart';
+import 'package:infinite_carousel/infinite_carousel.dart';
 
 import '../../core/constant/colors.dart';
-// import 'package:cached_network_image/cached_network_image.dart';
 
 class MovieHomePage extends StatefulWidget {
   const MovieHomePage({super.key});
@@ -19,7 +18,6 @@ class _MovieHomePageState extends State<MovieHomePage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      // statusBarColor: Colors.transparent, // Make status bar transparent
       statusBarIconBrightness: Brightness.light,
     ));
 
@@ -80,6 +78,28 @@ class _MovieHomePageState extends State<MovieHomePage> {
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                           ),
+                        ),
+                        child: InfiniteCarousel.builder(
+                          itemCount: 10,
+                          itemExtent: 120,
+                          center: true,
+                          anchor: 0.0,
+                          velocityFactor: 1.0,
+                          onIndexChanged: (index) {},
+                          // controller: controller,
+                          axisDirection: Axis.horizontal,
+                          loop: true,
+                          itemBuilder: (context, itemIndex, realIndex) {
+                            return const Column(
+                              children: [
+                                Text('he', style: TextStyle(color: Colors.white, fontSize: 30)),
+                                Text('he', style: TextStyle(color: Colors.white, fontSize: 30)),
+                                Text('he', style: TextStyle(color: Colors.white, fontSize: 30)),
+                                Text('he', style: TextStyle(color: Colors.white, fontSize: 30)),
+                                Text('he', style: TextStyle(color: Colors.white, fontSize: 30)),
+                              ],
+                            );
+                          },
                         ),
                       )),
                   //column for the lists of movies
