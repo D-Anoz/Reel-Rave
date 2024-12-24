@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class SuccessMessage extends StatelessWidget {
   final String message;
-  SuccessMessage({required this.message});
+  const SuccessMessage({required this.message});
 
   @override
   Widget build(BuildContext context) {

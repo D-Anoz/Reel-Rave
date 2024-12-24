@@ -17,9 +17,11 @@ class _TopRatedState extends State<TopRated> {
   final Map<int, bool> savedStatus = {};
 
   //methods
-  void toggleIsSaved(int movieId) {
+  void toggleIsSaved(int movieId, String movieName) {
     setState(() {
-      savedStatus[movieId] = !(savedStatus[movieId] ?? false);
+      final isSaved = savedStatus[movieId] ?? false;
+      savedStatus[movieId] = !isSaved;
+      displaySnackbar(context, movieName, !isSaved);
     });
   }
 
@@ -90,7 +92,7 @@ class _TopRatedState extends State<TopRated> {
                       onTap: () {
                         debugPrint('single tap');
                       },
-                      onDoubleTap: () => toggleIsSaved(movieResult.id!),
+                      onDoubleTap: () {},
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -120,7 +122,7 @@ class _TopRatedState extends State<TopRated> {
                             child: Text(
                               movieResult.title ?? 'Untitled title',
                               style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
-                              maxLines: 2,
+                              maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -146,6 +148,17 @@ class _TopRatedState extends State<TopRated> {
               return const Center(child: Text('Something is wrong'));
             },
             listener: (context, state) {}),
+      ),
+    );
+  }
+
+  void displaySnackbar(BuildContext context, String movieName, bool isAdded) {
+    final message = isAdded ? '$movieName has been saved in the list' : '$movieName has been removed from the list';
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: AppColors.primaryColor,
+        duration: const Duration(seconds: 4),
       ),
     );
   }

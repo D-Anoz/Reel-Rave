@@ -14,43 +14,53 @@ class TVScreen extends StatefulWidget {
 
 class _TVScreenState extends State<TVScreen> {
   //strings
-  final List<int> savedStatus = [];
+  // final List<int> savedStatus = [];
 
   //methods
-  void showAddedMessage(String listName) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$listName is added to your saved list. '),
-        backgroundColor: AppColors.primaryColor,
-        duration: const Duration(seconds: 5),
-        behavior: SnackBarBehavior.floating,
-        showCloseIcon: true,
-      ),
-    );
-  }
+  // void showAddedMessage(String listName) {
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     SnackBar(
+  //       content: Text('$listName added to list. '),
+  //       backgroundColor: AppColors.primaryColor,
+  //       duration: const Duration(seconds: 3),
+  //       behavior: SnackBarBehavior.floating,
+  //       showCloseIcon: true,
+  //     ),
+  //   );
+  // }
 
-  void showRemoveMessage(String listName) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$listName is removed from your saved list. '),
-        backgroundColor: AppColors.accentColor,
-        duration: const Duration(seconds: 5),
-        behavior: SnackBarBehavior.floating,
-        showCloseIcon: true,
-      ),
-    );
-  }
+  // void showRemoveMessage(String listName) {
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     SnackBar(
+  //       content: Text('$listName removed from list. '),
+  //       backgroundColor: AppColors.accentColor,
+  //       duration: const Duration(seconds: 3),
+  //       behavior: SnackBarBehavior.floating,
+  //       showCloseIcon: true,
+  //     ),
+  //   );
+  // }
 
-  void toggleIsSaved(int tvID, String listName) {
+  // void toggleIsSaved(int tvID, String listName) {
+  //   setState(() {
+  //     debugPrint('You have called the function.');
+  //     if (savedStatus.contains(tvID)) {
+  //       savedStatus.remove(tvID);
+  //       showRemoveMessage(listName);
+  //     } else {
+  //       savedStatus.add(tvID);
+  //       showAddedMessage(listName);
+  //     }
+  //   });
+  // }
+  final Map<int, bool> savedStatus = {};
+
+  //methods
+  void toggleIsSaved(int movieId, String movieName) {
     setState(() {
-      debugPrint('You have called the function.');
-      if (savedStatus.contains(tvID)) {
-        savedStatus.remove(tvID);
-        showRemoveMessage(listName);
-      } else {
-        savedStatus.add(tvID);
-        showAddedMessage(listName);
-      }
+      final isSaved = savedStatus[movieId] ?? false;
+      savedStatus[movieId] = !isSaved;
+      displaySnackbar(context, movieName, !isSaved);
     });
   }
 
@@ -100,6 +110,7 @@ class _TVScreenState extends State<TVScreen> {
                     final lists = tvlist[index];
                     final String year = lists.firstAirDate.year.toString(); //filtering the date only from the DateTime
                     final String ratings = lists.voteAverage.toString();
+                    final isSaved = savedStatus[lists.id] ?? false;
 
                     return GestureDetector(
                       onTap: () {
@@ -111,11 +122,24 @@ class _TVScreenState extends State<TVScreen> {
                         children: [
                           Card(
                             // elevation: 4,
-                            child: Column(
-                              children: [
-                                ClipRRect(borderRadius: BorderRadius.circular(8), child: Image.network('${AppServices.popular_movies_500px}${lists.posterPath}')),
-                              ],
-                            ),
+                            child: Stack(children: [
+                              Column(
+                                children: [
+                                  ClipRRect(borderRadius: BorderRadius.circular(8), child: Image.network('${AppServices.popular_movies_500px}${lists.posterPath}')),
+                                ],
+                              ),
+                              Positioned(
+                                top: 8,
+                                right: 8,
+                                child: isSaved
+                                    ? const Icon(
+                                        Icons.bookmark,
+                                        color: AppColors.primaryColor,
+                                        size: 28,
+                                      )
+                                    : const SizedBox.shrink(),
+                              )
+                            ]),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 4),
@@ -163,6 +187,17 @@ class _TVScreenState extends State<TVScreen> {
               return const Center(child: Text('You shouldn\'nt be here!'));
             },
             listener: (context, state) {}),
+      ),
+    );
+  }
+
+  void displaySnackbar(BuildContext context, String movieName, bool isAdded) {
+    final message = isAdded ? '$movieName has been saved in the list' : '$movieName has been removed from the list';
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: AppColors.primaryColor,
+        duration: const Duration(seconds: 4),
       ),
     );
   }
