@@ -1,9 +1,3 @@
-// To parse this JSON data, do
-//
-//     final tvModel = tvModelFromJson(jsonString);
-
-import 'dart:convert';
-
 class TvModel {
   final bool adult;
   final String? backdropPath;

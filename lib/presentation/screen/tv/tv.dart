@@ -13,46 +13,6 @@ class TVScreen extends StatefulWidget {
 }
 
 class _TVScreenState extends State<TVScreen> {
-  //strings
-  // final List<int> savedStatus = [];
-
-  //methods
-  // void showAddedMessage(String listName) {
-  //   ScaffoldMessenger.of(context).showSnackBar(
-  //     SnackBar(
-  //       content: Text('$listName added to list. '),
-  //       backgroundColor: AppColors.primaryColor,
-  //       duration: const Duration(seconds: 3),
-  //       behavior: SnackBarBehavior.floating,
-  //       showCloseIcon: true,
-  //     ),
-  //   );
-  // }
-
-  // void showRemoveMessage(String listName) {
-  //   ScaffoldMessenger.of(context).showSnackBar(
-  //     SnackBar(
-  //       content: Text('$listName removed from list. '),
-  //       backgroundColor: AppColors.accentColor,
-  //       duration: const Duration(seconds: 3),
-  //       behavior: SnackBarBehavior.floating,
-  //       showCloseIcon: true,
-  //     ),
-  //   );
-  // }
-
-  // void toggleIsSaved(int tvID, String listName) {
-  //   setState(() {
-  //     debugPrint('You have called the function.');
-  //     if (savedStatus.contains(tvID)) {
-  //       savedStatus.remove(tvID);
-  //       showRemoveMessage(listName);
-  //     } else {
-  //       savedStatus.add(tvID);
-  //       showAddedMessage(listName);
-  //     }
-  //   });
-  // }
   final Map<int, bool> savedStatus = {};
 
   //methods
@@ -114,7 +74,9 @@ class _TVScreenState extends State<TVScreen> {
 
                     return GestureDetector(
                       onTap: () {
-                        debugPrint('single tap');
+                        debugPrint(lists.id.toString());
+                        debugPrint(lists.originalName);
+                        debugPrint(lists.name);
                       },
                       onDoubleTap: () => toggleIsSaved(lists.id, lists.name),
                       child: Column(

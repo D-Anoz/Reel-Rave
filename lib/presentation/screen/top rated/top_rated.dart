@@ -91,6 +91,9 @@ class _TopRatedState extends State<TopRated> {
                     return GestureDetector(
                       onTap: () {
                         debugPrint('single tap');
+                        print(movieResult.id);
+                        // print(movieResult.id.runtimeType);
+                        Navigator.pushNamed(context, '/trDetails', arguments: movieResult.id);
                       },
                       onDoubleTap: () {},
                       child: Column(
@@ -101,7 +104,7 @@ class _TopRatedState extends State<TopRated> {
                             child: Stack(children: [
                               Column(
                                 children: [
-                                  ClipRRect(borderRadius: BorderRadius.circular(8), child: Image.network('${AppServices.popular_movies_500px}${movieResult!.posterPath}')),
+                                  ClipRRect(borderRadius: BorderRadius.circular(8), child: Image.network('${AppServices.popular_movies_500px}${movieResult.posterPath}')),
                                 ],
                               ),
                               Positioned(

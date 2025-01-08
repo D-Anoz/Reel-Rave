@@ -6,16 +6,23 @@ import 'package:reelrave/core/route/route.dart';
 import 'package:reelrave/presentation/bloc/TV/tv_bloc.dart';
 import 'package:reelrave/presentation/bloc/home/home_bloc.dart';
 
+import 'presentation/bloc/Top Rated Detail/tr_detail_bloc.dart';
 import 'presentation/screen/mainpage.dart';
 
 void main() {
   runApp(MultiBlocProvider(
       providers: [
         BlocProvider<HomeBloc>(create: (_) => HomeBloc()),
-        BlocProvider<TVBloc>(create: (_) => TVBloc())
+        BlocProvider<TVBloc>(create: (_) => TVBloc()),
+        BlocProvider<TrDetailBloc>(create: (_) => TrDetailBloc()),
       ],
       child: MaterialApp(
-        theme: ThemeData(scaffoldBackgroundColor: AppColors.bgColor),
+        theme: ThemeData(
+            scaffoldBackgroundColor: AppColors.bgColor,
+            appBarTheme: const AppBarTheme(
+              backgroundColor: AppColors.bgColor,
+              elevation: 0,
+            )),
         initialRoute: '/',
         routes: AppRoutes.getRoutes(),
       )));

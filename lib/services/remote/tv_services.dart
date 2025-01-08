@@ -14,7 +14,7 @@ class TvServices {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         if (data.containsKey('results')) {
-          print(data['results']);
+          // print(data['results']);
           tv = (data['results'] as List<dynamic>).map((item) {
             return TvModel.fromJson(item);
           }).toList();
