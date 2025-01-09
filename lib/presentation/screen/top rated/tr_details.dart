@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reelrave/core/constant/colors.dart';
+import 'package:url_launcher/link.dart';
 
 import '../../../core/constant/api_services.dart';
 import '../../bloc/Top Rated Detail/tr_detail_bloc.dart';
-import 'package:infinite_carousel/infinite_carousel.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TRDetails extends StatefulWidget {
   const TRDetails({super.key});
@@ -14,21 +15,14 @@ class TRDetails extends StatefulWidget {
 }
 
 class _TRDetailsState extends State<TRDetails> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   var id =
-  //   print(id);
-  // }
-
   @override
   Widget build(BuildContext context) {
     final movieID = ModalRoute.of(context)?.settings.arguments as int?;
     print(movieID);
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-      ),
+      // appBar: AppBar(
+      //   automaticallyImplyLeading: true,
+      // ),
       body: BlocProvider(
         create: (content) => TrDetailBloc()..add(TRDetailsLoadedEvent(id: movieID!)),
         child: BlocConsumer<TrDetailBloc, TrDetailState>(
@@ -61,31 +55,54 @@ class _TRDetailsState extends State<TRDetails> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Card(
-                      //   // elevation: 4,
-                      //   child: ClipRRect(borderRadius: BorderRadius.circular(8), child: Image.network('${AppServices.popular_movies_500px}${data.posterPath}')),
-                      // ),
-
-                      Container(
-                          height: 500,
-                          width: double.infinity,
-                          decoration: BoxDecoration(image: DecorationImage(image: NetworkImage('${AppServices.popular_movies_500px}${data.posterPath}', scale: 1), fit: BoxFit.fitWidth)),
-                          child: Container(
-                            decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.transparent,
-                                  Color(0xFF333333)
-                                ],
-                                stops: [
-                                  0.0,
-                                  0.99,
-                                ],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                              ),
-                            ),
-                          )),
+                      SizedBox(
+                        height: 500,
+                        child: CarouselView(
+                          itemExtent: double.infinity,
+                          children: [
+                            Container(
+                                height: 500,
+                                width: double.infinity,
+                                decoration: BoxDecoration(image: DecorationImage(image: NetworkImage('${AppServices.popular_movies_500px}${data.belongsToCollection.posterPath}', scale: 1), fit: BoxFit.fitWidth)),
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.transparent,
+                                        Color(0xFF333333)
+                                      ],
+                                      stops: [
+                                        0.0,
+                                        0.99
+                                      ],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                    ),
+                                  ),
+                                )),
+                            Container(
+                                height: 500,
+                                width: double.infinity,
+                                decoration: BoxDecoration(image: DecorationImage(image: NetworkImage('${AppServices.popular_movies_500px}${data.belongsToCollection.backdropPath}', scale: 1), fit: BoxFit.fitHeight)),
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.transparent,
+                                        Color(0xFF333333)
+                                      ],
+                                      stops: [
+                                        0.0,
+                                        0.99
+                                      ],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                    ),
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ),
 
                       //name starts from here
                       Padding(
@@ -93,12 +110,20 @@ class _TRDetailsState extends State<TRDetails> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              data.belongsToCollection.name,
-                              style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                            Link(
+                                uri: Uri.parse(data.homepage),
+                                target: LinkTarget.defaultTarget,
+                                builder: (context, openlink) {
+                                  return GestureDetector(
+                                    onTap: openlink,
+                                    child: Text(
+                                      data.belongsToCollection.name,
+                                      style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  );
+                                }),
                             SizedBox(
                               height: 25,
                               child: ListView.builder(
@@ -116,10 +141,10 @@ class _TRDetailsState extends State<TRDetails> {
                                               text: data.genres[index].name,
                                               style: const TextStyle(color: AppColors.yearColor, fontSize: 16),
                                             ),
-                                            const TextSpan(
-                                              text: ' .',
-                                              style: TextStyle(color: AppColors.yearColor, fontSize: 24, fontWeight: FontWeight.bold),
-                                            ),
+                                            TextSpan(
+                                              text: index != data.genres.length - 1 ? '.' : ' ',
+                                              style: const TextStyle(color: AppColors.yearColor, fontSize: 24, fontWeight: FontWeight.bold),
+                                            )
                                           ],
                                         ),
                                       ),
@@ -137,33 +162,40 @@ class _TRDetailsState extends State<TRDetails> {
 
                             //cast and crew starts here
                             SizedBox(
-                              height: 120, // Define a fixed height for the horizontal ListView
+                              height: 120,
                               child: ListView.builder(
                                 physics: const BouncingScrollPhysics(),
                                 scrollDirection: Axis.horizontal,
                                 itemCount: data.productionCompanies.length,
                                 itemBuilder: (context, index) {
-                                  return Container(
-                                    width: 80, // Width of each card
-                                    margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min, // Fit content inside the column
-                                      children: [
-                                        Image.network(
-                                          '${AppServices.popular_movies_500px}${data.productionCompanies[index].logoPath}',
-                                          height: 60,
-                                          width: 60,
-                                          fit: BoxFit.cover,
-                                        ),
-                                        const SizedBox(height: 8), // Add spacing between image and text
-                                        Text(
-                                          data.productionCompanies[index].name,
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(fontSize: 12), // Adjust font size
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ],
+                                  print(data.productionCompanies[index].logoPath);
+                                  final item = data.productionCompanies;
+
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: 16),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: Colors.white,
+                                      ),
+                                      padding: const EdgeInsets.all(8),
+                                      width: 80,
+                                      margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          item[index].logoPath != null ? Image.network('${AppServices.popular_movies_500px}${item[index].logoPath}', height: 52, width: 52, fit: BoxFit.cover) : Image.asset('assets/images/logo.png', height: 52, width: 52, fit: BoxFit.cover),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            item[index].name,
+                                            textAlign: TextAlign.left,
+                                            style: const TextStyle(fontSize: 12, color: Colors.black),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },
