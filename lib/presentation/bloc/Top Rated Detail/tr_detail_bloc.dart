@@ -20,7 +20,7 @@ class TrDetailBloc extends Bloc<TRDetailsEvent, TrDetailState> {
             final topRatedDetail = await topRatedDetailServices.fetchTRD(event.id);
             final item = topRatedDetail.genres;
             print(topRatedDetail);
-            emit(TrDetailLoadedState(topRatedDetails: topRatedDetail, genre: item));
+            emit(TrDetailLoadedState(topRatedDetails: topRatedDetail, genre: item!));
           } catch (e) {
             emit(TrDetailErrorState(errMsg: e.toString()));
           }
